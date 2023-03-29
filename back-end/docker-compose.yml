@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  db:
+    container_name: teste_smart_se
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_smart_se
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-test-smart:/var/lib/postgresql/data
+volumes:
+  db-test-smart:
