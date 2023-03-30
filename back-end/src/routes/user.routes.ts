@@ -4,6 +4,6 @@ import  userController from "../controllers/user/UserController.js";
 const userRoutes = Router();
 
 userRoutes.post("/register", userController.register);
-userRoutes.post("/token", userController.token);
+userRoutes.post("/token" ,userController.token);
 
 export {userRoutes};
