@@ -7,12 +7,11 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { IHistorySupply } from '@/protocols/HistorySupply';
 
-
-export default function TableDetails<T extends  Record<string, any>>(props: {title: string, titleColumns: string[],  open: boolean, infos: T[], cols: number}) {
-    const {title, titleColumns, open, infos, cols } = props;
-
+export default function TableDetails<T extends  Record<string, any>>(props: {title: string, titleColumns: string[],  open: boolean, infos: T[], cols: number, loading: boolean}) {
+    const {title, titleColumns, open, infos, cols , loading} = props;
+    
+    if (loading) return <p>Carregando...</p>
     return <>
     <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={cols}>
@@ -33,6 +32,7 @@ export default function TableDetails<T extends  Record<string, any>>(props: {tit
                   {infos.map((obj, i) => (
                     <TableRow key={i}>
                         {Object.keys(obj).map((key, j)=> (
+                            
                             <TableCell key={j}>{String(obj[key]).toLocaleUpperCase()}</TableCell>
                         ))}
                     </TableRow>

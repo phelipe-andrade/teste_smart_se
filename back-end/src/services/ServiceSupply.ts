@@ -1,15 +1,22 @@
 import { Supply } from "@prisma/client";
 import { AppError } from "../errors/AppError.js";
 import { prisma } from "../prisma/client.js";
-import { CreateSupplyDTO, UpdateSupplyDTO } from "../controllers/supply/dto/SupplyDTO.js";
+import { CreateSupplyDTO, GetSupplyDTO, UpdateSupplyDTO } from "../controllers/supply/dto/SupplyDTO.js";
 import { ResultResponseMessage } from "../protocols/ResultResponseMessage.js";
 import checkPlate from "../helper/checkPlate.js";
 
 
 class ServiceSupply {
 
-  async getAllSupplies(): Promise<Supply[]> {
-    return await prisma.supply.findMany();
+  async getAllSupplies(): Promise<GetSupplyDTO[]> {
+    return await prisma.supply.findMany({
+      select: {
+        id: true,
+        qtd: true,
+        type_fuel: true,
+        value: true,
+        created_at: true
+      }});
   }
 
   async getSupply(id: number): Promise<Supply> {

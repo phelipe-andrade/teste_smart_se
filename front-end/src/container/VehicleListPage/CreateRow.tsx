@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {Fragment, useState, Dispatch, SetStateAction} from 'react';
 import { IconButton, TableCell, TableRow } from '@mui/material';
 import TableDetails from '@/components/TableDetails';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -8,42 +8,47 @@ import { IHistorySupply } from '@/protocols/HistorySupply';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import Link from 'next/link';
+import { getLocalStorage } from '@/helper/localStorage';
+import { DELETE_VEHICLE, GET_VEHICLE_DETAILS } from '@/api';
+import useFetch from '@/helper/useFetch';
+import { VehicleWithDetails } from '@/protocols/VehicleWithDetails';
 
+export default function CreateRow(props: { row: InfosDataVehicleList, cols: number, att: boolean, setAtt: Dispatch<SetStateAction<boolean>>}) {
+    const { row, cols, att, setAtt } = props;  
+    const [open, setOpen] = useState(false);
+    const [vehicleDetails, setVehicleDetails] = useState<IHistorySupply[]>([]);
+    const {loading, error, request, data} = useFetch<VehicleWithDetails>();
+    const token = getLocalStorage('token') as string;
 
-export default function CreateRow(props: { row: InfosDataVehicleList, cols: number}) {
-    const { row, cols } = props;  
-    const [open, setOpen] = React.useState(false);
+    const handleHistoryVehicle = async () => {
+      setOpen(!open);
 
-    const handleHistorySupply = () => {
-        // Buscar no banco de dados 
+      if(data) return;     
+      const {url, options} = GET_VEHICLE_DETAILS(token, row.plate)
+      const {response, json} = await request(url, options);              
+      if(response && response.ok) setVehicleDetails(json.supplies);
+      setAtt(false)      
     }
 
-    const deleteVehicle = (plate: string) => {
+    const deleteVehicle = async (plate: string) => {
       const result = confirm(`Deseja deletar o veículo com placa de n°: ${plate}`);
-      if(result) console.log('apagou');      
-      
-    }
+      if(!result) return;
 
-    const mockSupplies: IHistorySupply[] = [
-      {qtd: 12.30, type_fuel: "alcool", value: 150, created_at: "2023-03-30T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "gasolina", value: 200, created_at: "2023-03-31T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "gasolina", value: 300, created_at: "2023-03-20T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "alcool", value: 50.10, created_at: "2023-03-19T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "alcool", value: 20, created_at: "2023-03-07T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "gasolina", value: 156.23, created_at: "2023-03-09T11:52:51.118Z"},
-      {qtd: 12.30, type_fuel: "alcool", value: 200, created_at: "2023-03-03T11:52:51.118Z"},
-    ]
+      const {url, options} = DELETE_VEHICLE(token, row.plate)
+      const {response} = await request(url, options); 
+      if(response && response.ok) setAtt(true);
+    }
 
     const titleDetails: string[] = ["Quantidade", "Combustível", "Valor (R$)", "Data"];
-  
+
     return (
-      <React.Fragment>
+      <Fragment>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
           <TableCell>
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={handleHistoryVehicle}
             >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
@@ -73,7 +78,7 @@ export default function CreateRow(props: { row: InfosDataVehicleList, cols: numb
             <DeleteForeverIcon sx={{color: 'red'}}/>
           </TableCell>
         </TableRow>
-        <TableDetails  title='Abastecimentos' titleColumns={titleDetails} open={open} infos={mockSupplies} cols={cols}/>
-      </React.Fragment>
+        <TableDetails title='Abastecimentos' titleColumns={titleDetails} open={open} infos={vehicleDetails} cols={cols} loading={loading}/>
+      </Fragment>
   );
 }

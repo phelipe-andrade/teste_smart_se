@@ -8,7 +8,6 @@ class ValidateFields {
     };
     validate = (req, res, next) => {
         const currentRoute = req.originalUrl.split('/').pop() ?? '';
-        console.log(currentRoute);
         const requiredFields = this.requiredFields[currentRoute];
         const missingFields = requiredFields.filter(field => !(field in req.body));
         if (missingFields.length) {

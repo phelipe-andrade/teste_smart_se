@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import {Button, TextField, Typography} from '@mui/material';
 import {StyledForm, StyledBoxInput} from '@/styles/stylesGlobal';
-
+import { CREATE_USER } from '@/api';
+import useFetch from '@/helper/useFetch';
+import { useRouter } from 'next/router';
+import Error from '@/components/Error';
+import ButtonCustom from '@/components/ButtonCustom';
 
 export default function LoginForm() {
-
+  const router = useRouter();
+  const { loading, error, request } = useFetch<{token: string}>();
   const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -34,11 +39,17 @@ export default function LoginForm() {
     else setPasswordError({value: false, text: ''});
   };
 
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
+  async function handleSubmit(event: React.MouseEvent<HTMLButtonElement, MouseEvent>){
     event.preventDefault();
     handlePassword();
-    handleCpf();    
-    if (cpf.length && !passwordError.value) console.log("Submit");
+    handleCpf();
+
+    if (cpf.length && !passwordError.value) {
+      const {url, options} = CREATE_USER({cpf, password})
+      const {response} = await request(url, options);    
+      if(response && response.ok) router.push("/users/login");
+    }
   };
 
   return (
@@ -54,7 +65,7 @@ export default function LoginForm() {
       >
         <TextField
           sx={{my: 1}}
-          id="outlined-error-helper-text"
+          id="cpf"
           label="CPF"
           placeholder="Ex: 00000000000"
           type="tel"
@@ -67,7 +78,7 @@ export default function LoginForm() {
         />
         <TextField
           sx={{my: 1}}
-          id="outlined-error-helper-text"
+          id="senha"
           label="Senha"
           placeholder="*********"
           type="password"
@@ -79,7 +90,7 @@ export default function LoginForm() {
         />
         <TextField
           sx={{my: 1}}
-          id="outlined-error-helper-text"
+          id="rsenha"
           label="Repita a senha"
           placeholder="*********"
           type="password"
@@ -88,15 +99,9 @@ export default function LoginForm() {
           error={passwordError.value}
           helperText={passwordError.value && passwordError.text}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-        >
-          Criar usuário
-        </Button>
+        <ButtonCustom text='Criar usuário' loading={loading} callback={handleSubmit}/>
       </StyledBoxInput>
-      
+      {error.value && <Error message={error.message}/>}
     </StyledForm>
   );
 };

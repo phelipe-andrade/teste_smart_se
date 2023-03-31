@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState , Fragment, Dispatch, SetStateAction} from 'react';
 import { InfosDataSupplyList } from "@/protocols/InfosDataSupplyList";
 import { IconButton, TableCell, TableRow } from '@mui/material';
 import TableDetails from '@/components/TableDetails';
@@ -7,35 +7,58 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import Link from 'next/link';
+import useFetch from '@/helper/useFetch';
+import { getLocalStorage } from '@/helper/localStorage';
+import { DELETE_SUPPLY, GET_SUPPLY_DETAILS } from '@/api';
+import { SupplyWithDetails } from '@/protocols/SupplyWithDetails';
 
-export default function CreateRow(props: {row: InfosDataSupplyList, cols: number}) {
-    const { row, cols } = props;  
-    const [open, setOpen] = React.useState(false);
+export default function CreateRow(props: { row: InfosDataSupplyList, cols: number, att: boolean, setAtt: Dispatch<SetStateAction<boolean>>}) {
+    const { row, cols, att, setAtt } = props;  
+    const [open, setOpen] = useState(false);
     
-    const handleHistorySupply = () => {
-        // Buscar no banco de dados 
+    const [supplyDetails, setsupplyDetails] = useState<SupplyWithDetails>({
+      cpf: '',
+      plate: '',
+      renavam: '',
+      model: '',
+      brand: '',
+      state: ''
+    });
+
+    const {loading, data, error, request} = useFetch<SupplyWithDetails>();
+    const token = getLocalStorage('token') as string;
+
+    
+    const handleHistorySupply = async () => {
+      setOpen(!open);
+
+      if(data) return;     
+      const {url, options} = GET_SUPPLY_DETAILS(token, Number(row.id))
+      const {response, json} = await request(url, options);              
+      if(response && response.ok) setsupplyDetails(json);
+      setAtt(false);
     }
 
-    const deleteSupply = (id: number) => {
+    const deleteSupply = async (id: number) => {
       const result = confirm(`Deseja deletar o abastecimento com id de n°: ${id}`);
-      if(result) console.log('apagou');      
-    }
+      if(!result) return;
 
-    const mockDetails = [
-        {cpf: '02956328107', plate: "sfs25e96", renavam: "01234567891", model: "fusca", brand: "volks", state: "novo"}
-    ];
+      const {url, options} = DELETE_SUPPLY(token, id);
+      const {response} = await request(url, options); 
+      if(response && response.ok) setAtt(true);
+    }
 
     const titleDetails: string[] = ["Cadastrado por(CPF) :", "Placa", "Renavam", "Modelo", "Marca", "Estado"];
 
 
     return (
-      <React.Fragment>
+      <Fragment>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
           <TableCell>
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={handleHistorySupply}
             >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
@@ -62,7 +85,7 @@ export default function CreateRow(props: {row: InfosDataSupplyList, cols: number
             <DeleteForeverIcon sx={{color: 'red'}}/>
           </TableCell>
         </TableRow>
-        <TableDetails  title='Informações gerais:' titleColumns={titleDetails} open={open} infos={mockDetails} cols={cols}/>
-      </React.Fragment>
+        <TableDetails  title='Informações gerais:' titleColumns={titleDetails} open={open} infos={[supplyDetails]} cols={cols} loading={loading}/>
+      </Fragment>
   );
 }

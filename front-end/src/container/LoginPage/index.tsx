@@ -17,7 +17,7 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const { login } = useSelector((state: UserValidLogin) => state.user);  
 
-  const { loading, error, request, data } = useFetch<{token: string}>();
+  const { loading, error, request } = useFetch<{token: string}>();
   const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
   const [cpfError, setCpfError] = useState(false);

@@ -29,6 +29,7 @@ class ServiceVehicle {
     async update(vehicle) {
         const { plate } = vehicle;
         checkPlate(plate);
+        console.log(vehicle);
         const vehicleExists = await prisma.vehicle.findFirst({ where: { plate: { equals: plate, mode: 'insensitive' } } });
         if (!vehicleExists)
             throw new AppError(`Veículo com n° da placa: ${plate} não encontrado.`);
@@ -43,9 +44,10 @@ class ServiceVehicle {
         const vehicleExists = await prisma.vehicle.findUnique({ where: { plate } });
         if (!vehicleExists)
             throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate}`);
+        await prisma.supply.deleteMany({ where: { vehiclePlate: plate } });
         return await prisma.vehicle.delete({ where: { plate } })
             .then(() => ({ status: "success", message: "Veículo deletado com sucesso." }))
-            .catch(() => { throw new AppError("Error ao deletar veículo."); });
+            .catch((error) => { throw new AppError("Error ao deletar veículo."); });
     }
 }
 export default new ServiceVehicle();

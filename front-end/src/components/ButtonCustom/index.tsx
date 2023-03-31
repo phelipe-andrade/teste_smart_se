@@ -11,6 +11,7 @@ export default function ButtonCustom(props: IButton) {
         {
           loading ?
           <Button
+          sx={{my: 2}}
           variant="contained"
           color="primary"
           disabled
@@ -19,6 +20,7 @@ export default function ButtonCustom(props: IButton) {
         </Button>
           :
           <Button
+          sx={{my: 2}}
           variant="contained"
           color="primary"
           onClick={callback}

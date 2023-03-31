@@ -1,24 +1,34 @@
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 import { useRouter } from 'next/router';
 import {Table, TableBody, TableContainer, Paper, Button, Typography } from '@mui/material';
 import CreateRow from './CreateRow';
 import { InfosDataVehicleList } from '@/protocols/InfosDataVehicleList';
 import TableHeaderCustom from '@/components/TableHeaderCustom';
-
-
-const rows: InfosDataVehicleList[] = [
-  {plate: 'dfr05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'},
-  {plate: 'czr05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'},
-  {plate: 'err05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'},
-  {plate: 'hyr05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'},
-  {plate: 'qwr05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'},
-  {plate: 'vfr05s65', renavam: '01234567891', color: 'braco', power: 120, model: 'fusca', brand: 'volks', year_launch: 1990, state: 'usado'}
-];
+import useFetch from '@/helper/useFetch';
+import { GET_VEHICLE_LIST } from '@/api';
+import { getLocalStorage } from '@/helper/localStorage';
+import Error from '@/components/Error';
 
 const titlesHead = [ "Placa", "Renavam", "Cor", "Potência", "Modelo", "Marca", "Ano", "Estado", "Editar", "Excluir"];
 
 export default function VehicleList() {
   const router = useRouter();
+  const [vehicleList, setVehicleList] = useState<InfosDataVehicleList[]>();
+  const {loading, error, request} = useFetch<InfosDataVehicleList[]>();
+  const [att, setAtt] = useState(false);
+
+  useEffect(()=> {
+    async function getVehicles() { 
+      const token = getLocalStorage('token') as string;
+      const {url, options} = GET_VEHICLE_LIST(token)
+      const {response, json} = await request(url, options);    
+      if(response && response.ok) setVehicleList(json);
+    }
+
+    getVehicles();
+  },[request, att])
+
+  if(loading) return <p>carregando...</p>;
 
   return (
     <>
@@ -29,8 +39,8 @@ export default function VehicleList() {
         <Table aria-label="collapsible table">
           <TableHeaderCustom titlesHead={titlesHead}/>
           <TableBody>
-            {rows.map((row, i) => (
-              <CreateRow key={row.plate + i} row={row} cols={titlesHead.length + 2}/>
+            {vehicleList?.map((row, i) => (
+              <CreateRow key={row.plate + i} row={row} cols={titlesHead.length + 2} att={att} setAtt={setAtt}/>
               ))}
           </TableBody>
         </Table>
@@ -43,6 +53,7 @@ export default function VehicleList() {
       >
         Cadastrar novo veículo
       </Button>
+      {error.value && <Error message={error.message}/>}
     </>
   );
 }

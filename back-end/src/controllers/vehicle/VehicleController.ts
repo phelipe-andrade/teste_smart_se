@@ -17,14 +17,14 @@ class VehicleController {
   }
 
   async create(req: RequestWithUserId, res: Response) {
-    const {body, id} = req;
+    const {body, id} = req;    
     if(!id) throw new AppError("Problema na autenticação.")
     const result = await serviseVehicle.create(body, id);
     return res.status(201).json(result);
   }
 
   async update(req: Request, res: Response) {
-    const vehicle = req.body;
+    const vehicle = req.body;   
     const result = await serviseVehicle.update(vehicle);
     return res.status(200).json(result);
   }
@@ -33,7 +33,7 @@ class VehicleController {
     const {plate} = req.params;
     if(!plate || typeof plate !== 'string') throw new AppError("Placa do veículo informado não esta correto");
     const result = await serviseVehicle.delete(plate);
-    return res.status(200).json(result);
+    return res.status(204).json(result);
   }
 }
 

@@ -2,22 +2,30 @@ import { useState } from "react"
 import { RegisterSupply } from "@/protocols/RegisterSupply"
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { StyledBoxInput, StyledForm } from "@/styles/stylesGlobal";
+import { useRouter } from "next/router";
+import { getLocalStorage } from "@/helper/localStorage";
+import { CREATE_SUPPLY } from "@/api";
+import useFetch from "@/helper/useFetch";
+import Error from "@/components/Error";
 
 export default function RegisterSupplyPage() {
-    const [infos, setInfos] = useState<RegisterSupply>({
-        qtd: null,
-        type_fuel: '',
-        value: null,
-        vehiclePlate: ''
-    })
+  const router = useRouter();
+  const {loading, request, error} = useFetch<RegisterSupply>();
+  const [infos, setInfos] = useState<RegisterSupply>({
+      qtd: null,
+      type_fuel: '',
+      value: null,
+      vehiclePlate: ''
+  })
 
-    const [infosError, setInfosError] = useState(false);
-
-    const handleSubmit = () => {
-        console.log(infos);
-        
+    const handleSubmit = async () => {
+      const token = getLocalStorage('token') as string;
+      const {url, options} = CREATE_SUPPLY(token, infos)
+      const {response} = await request(url, options);    
+      if(response && response.ok) router.push("/supply/list");
     }
     
+    if(loading) return <p>Carregando...</p>
     return (
     <StyledForm
       component="form"
@@ -35,8 +43,6 @@ export default function RegisterSupplyPage() {
           placeholder="Ex: 100"
           type="tel"
           inputProps={{ inputMode: 'numeric', maxLength: 11}}
-          error={infosError}
-          helperText={infosError && "Informe um renavam"}
           value={infos.qtd}
           onChange={(e) => setInfos({...infos, qtd: Number(e.target.value.replace(/\D/g, ''))})}
         />
@@ -63,8 +69,6 @@ export default function RegisterSupplyPage() {
           placeholder="Ex: 100"
           type="tel"
           inputProps={{ inputMode: 'numeric', maxLength: 6}}
-          error={infosError}
-          helperText={infosError && "Informe um renavam"}
           value={infos.value}
           onChange={(e) => setInfos({...infos, value: Number(e.target.value.replace(/\D/g, ''))})}
         />
@@ -76,8 +80,6 @@ export default function RegisterSupplyPage() {
           placeholder="Ex: XXX00X00"
           type="text"
           inputProps={{ inputMode: 'text', maxLength: 8 }}
-          error={infosError}
-          helperText={infosError && "Placa passado está incorreto"}
           value={infos.vehiclePlate}
           onChange={(e) => setInfos({...infos, vehiclePlate: e.target.value})}
         />
@@ -91,7 +93,7 @@ export default function RegisterSupplyPage() {
           Cadastrar
         </Button>
       </StyledBoxInput>
-  
+      {error.value && <Error message={error.message}/>}
     </StyledForm>
   );
 }

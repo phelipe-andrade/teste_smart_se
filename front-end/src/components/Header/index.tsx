@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
+import { useRouter } from 'next/router';
 import {AppBar, Box, Toolbar, Menu, Typography, IconButton, Container, Button, Tooltip, MenuItem} from '@mui/material';
-
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { loginUser } from '@/store/user';
 import MenuMobile from './MenuMobile';
+import { deleteLocalStorage } from '@/helper/localStorage';
 
 export interface IPage {
     text: string;
@@ -17,6 +18,7 @@ export interface IPage {
 const pages: IPage[] = [{text: 'Veículos', link: 'vehicle/list'}, {text: 'Abastecimentos', link: 'supply/list'}];
 
 export default function ResponsiveAppBar() {
+  const router = useRouter();
   const { login } = useSelector((state: UserValidLogin) => state.user);
   const dispatch = useDispatch();
 
@@ -40,7 +42,11 @@ export default function ResponsiveAppBar() {
 
   const handleLogout = () => {
     handleCloseUserMenu();
-    if(login) dispatch(loginUser({login: false}));
+    if(login){
+      dispatch(loginUser({login: false}));
+      deleteLocalStorage('token');
+      router.push("/users/login");
+    };
   }
 
   return (
@@ -126,12 +132,6 @@ export default function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-
-            {/* <Link href={`/perfil`}>
-                <MenuItem  onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Perfil</Typography>
-                </MenuItem>
-            </Link> */}
             { login ? 
                 <MenuItem  onClick={handleLogout}>
                 <Typography textAlign="center">Logout</Typography>

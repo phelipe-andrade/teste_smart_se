@@ -4,7 +4,19 @@ import checkPlate from "../helper/checkPlate.js";
 class ServiceDetails {
     async vehicleWithDetails(plate) {
         checkPlate(plate);
-        const vehicleWithSupplies = await prisma.vehicle.findUnique({ where: { plate }, include: { supplies: true } });
+        const vehicleWithSupplies = await prisma.vehicle.findUnique({
+            where: { plate },
+            include: {
+                supplies: {
+                    select: {
+                        qtd: true,
+                        type_fuel: true,
+                        value: true,
+                        created_at: true
+                    }
+                }
+            }
+        });
         if (!vehicleWithSupplies)
             throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate}`);
         return vehicleWithSupplies;
@@ -14,14 +26,16 @@ class ServiceDetails {
             where: { id },
             include: {
                 user: {
-                    select: { id: true, cpf: true }
+                    select: { cpf: true }
                 },
-                vehicle: true
+                vehicle: {
+                    select: { plate: true, renavam: true, model: true, brand: true, state: true }
+                }
             }
         });
         if (!supplyWithDetails)
             throw new AppError(`Não existe nenhum abastecimento cadastrado com o id de n°: ${id}`);
-        return supplyWithDetails;
+        return { ...supplyWithDetails.user, ...supplyWithDetails.vehicle };
     }
     async userWithDetails(id) {
         const userWithDetails = await prisma.user.findUnique({

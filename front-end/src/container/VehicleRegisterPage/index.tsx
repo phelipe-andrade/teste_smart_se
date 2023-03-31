@@ -2,32 +2,35 @@ import React, { useState } from 'react';
 import { StyledBoxInput, StyledForm } from "@/styles/stylesGlobal";
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { RegisterVehicle } from '@/protocols/RegisterVehicle';
+import { getLocalStorage } from '@/helper/localStorage';
+import { CREATE_VEHICLE } from '@/api';
+import useFetch from '@/helper/useFetch';
+import { useRouter } from 'next/router';
+import Error from '@/components/Error';
+import ButtonCustom from '@/components/ButtonCustom';
 
 export default function RegisterVehiclePage() {
+  const router = useRouter();
+  const {loading, request, error} = useFetch<RegisterVehicle>();
   const [infos, setInfos] = useState<RegisterVehicle>({
     plate: '',
     renavam: '',
     model: '',
     brand: '',
     color: '',
-    power: '',
-    year_launch: '',
+    power: null,
+    year_launch: null,
     state: ''
   })
 
-  const [infosError, setInfosError] = useState(false);
-
-  const handleField = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
-
-    
+  const handleSubmit = async () => {   
+    const token = getLocalStorage('token') as string;
+    const {url, options} = CREATE_VEHICLE(token, infos)
+    const {response} = await request(url, options);    
+    if(response && response.ok) router.push("/vehicle/list");
   }
 
-  const handleSubmit = () => {
-    console.log(infos);
-    
-  }
-  
-    return (
+  return (
     <StyledForm
       component="form"
     >
@@ -44,8 +47,6 @@ export default function RegisterVehiclePage() {
           placeholder="Ex: XXX00X00"
           type="text"
           inputProps={{ inputMode: 'text', maxLength: 8 }}
-          error={infosError}
-          helperText={infosError && "Placa passado está incorreto"}
           value={infos.plate}
           onChange={(e) => setInfos({...infos, plate: e.target.value})}
         />
@@ -56,8 +57,6 @@ export default function RegisterVehiclePage() {
           placeholder="Ex: 00000000000"
           type="tel"
           inputProps={{ inputMode: 'numeric', maxLength: 11}}
-          error={infosError}
-          helperText={infosError && "Informe um renavam"}
           value={infos.renavam}
           onChange={(e) => setInfos({...infos, renavam: e.target.value.replace(/\D/g, '')})}
         />
@@ -67,8 +66,6 @@ export default function RegisterVehiclePage() {
           label="Modelo"
           placeholder="Ex: Fusca"
           type="text"
-          error={infosError}
-          helperText={infosError && "Informe um modelo"}
           value={infos.model}
           onChange={(e) => setInfos({...infos, model: e.target.value})}
         />
@@ -78,8 +75,6 @@ export default function RegisterVehiclePage() {
           label="Marca"
           placeholder="Ex: Volksvagem"
           type="text"
-          error={infosError}
-          helperText={infosError && "Informe uma marca"}
           value={infos.brand}
           onChange={(e) => setInfos({...infos, brand: e.target.value})}
         />
@@ -89,8 +84,6 @@ export default function RegisterVehiclePage() {
           label="Cor"
           placeholder="Ex: Preta"
           type="text"
-          error={infosError}
-          helperText={infosError && "Placa passado está incorreto"}
           value={infos.color}
           onChange={(e) => setInfos({...infos, color: e.target.value})}
         />
@@ -101,10 +94,8 @@ export default function RegisterVehiclePage() {
           placeholder="Ex: 120"
           type="tel"
           inputProps={{ inputMode: 'numeric', maxLength: 4 }}
-          error={infosError}
-          helperText={infosError && "Placa passado está incorreto"}
           value={infos.power}
-          onChange={(e) => setInfos({...infos, power: e.target.value.replace(/\D/g, '')})}
+          onChange={(e) => setInfos({...infos, power: Number(e.target.value.replace(/\D/g, ''))})}
         />
         <TextField
           sx={{my: 1}}
@@ -113,10 +104,8 @@ export default function RegisterVehiclePage() {
           placeholder="Ex: 1990"
           type="tel"
           inputProps={{ inputMode: 'numeric', maxLength: 4 }}
-          error={infosError}
-          helperText={infosError && "Placa passado está incorreto"}
           value={infos.year_launch}
-          onChange={(e) => setInfos({...infos, year_launch: e.target.value.replace(/\D/g, '')})}
+          onChange={(e) => setInfos({...infos, year_launch: Number(e.target.value.replace(/\D/g, ''))})}
         />
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Estado</InputLabel>
@@ -132,16 +121,9 @@ export default function RegisterVehiclePage() {
             <MenuItem value={"USADO"}>Usado</MenuItem>
           </Select>
         </FormControl>
-        <Button
-        sx={{my: 2}}
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-        >
-          Cadastrar
-        </Button>
+        <ButtonCustom text='CADASTRAR' loading={loading} callback={handleSubmit}/>
       </StyledBoxInput>
-  
+      {error.value && <Error message={error.message}/>}
     </StyledForm>
   );
 }

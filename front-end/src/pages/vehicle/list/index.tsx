@@ -1,5 +1,6 @@
 import VehiclePage from "@/container/VehicleListPage";
+import Authentication from "@/helper/Authentication";
 
 export default function VehicleList() {
-    return <VehiclePage/>
+    return <Authentication> <VehiclePage/></Authentication>
 }

@@ -13,10 +13,8 @@ class ValidateFields {
     register: ['cpf', 'password'],
   };
 
-  validate = (req: Request, res: Response, next: NextFunction) => {
-    const currentRoute = req.originalUrl.split('/').pop() ?? '';
-    console.log(currentRoute);
-    
+  validate = (req: Request, res: Response, next: NextFunction) => {   
+    const currentRoute = req.originalUrl.split('/').pop() ?? '';   
     const requiredFields = this.requiredFields[currentRoute];
 
     const missingFields = requiredFields.filter(field => !(field in req.body));

@@ -3,7 +3,15 @@ import { prisma } from "../prisma/client.js";
 import checkPlate from "../helper/checkPlate.js";
 class ServiceSupply {
     async getAllSupplies() {
-        return await prisma.supply.findMany();
+        return await prisma.supply.findMany({
+            select: {
+                id: true,
+                qtd: true,
+                type_fuel: true,
+                value: true,
+                created_at: true
+            }
+        });
     }
     async getSupply(id) {
         const supplyExists = await prisma.supply.findUnique({ where: { id } });

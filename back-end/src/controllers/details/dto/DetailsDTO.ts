@@ -1,13 +1,23 @@
-import { Supply, User, Vehicle } from "@prisma/client";
+import { Supply, Vehicle } from "@prisma/client";
 import { ReturnUserDTO } from "../../user/dto/UserDTO";
+import { SupplyDTO } from "../../supply/dto/SupplyDTO";
 
 export interface VehiclesWithSuppliesDTO extends Vehicle {
-  supplies: Supply[];
+  supplies:{
+    qtd: number;
+    type_fuel: string;
+    value: number;
+    created_at: Date;
+  }[];
 }
 
-export interface SupplyWithDetails extends Supply {
-  user: ReturnUserDTO;
-  vehicle: Vehicle;
+export interface SupplyWithDetails {
+  cpf: string;
+  plate: string;
+  renavam: string;
+  model: string;
+  brand: string;
+  state: string;
 }
 
 export interface UserWithDetails extends ReturnUserDTO {

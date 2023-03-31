@@ -6,14 +6,14 @@ interface ReturnFetch<T> {
 }
 
 function useFetch<T>() {
-  const [data, setData] = React.useState();
+  const [data, setData] = React.useState(null);
   const [error, setError] = React.useState({message: '', value: false});
   const [loading, setLoading] = React.useState(false);
   const request = React.useCallback(async (url: string, options: any): Promise<ReturnFetch<T>> => {
     
     let response;
     let json;
-    try {
+    try {     
       setError({message: '', value: false});
       setLoading(true);
       response = await fetch(url, options);

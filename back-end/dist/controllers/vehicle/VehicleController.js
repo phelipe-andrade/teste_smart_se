@@ -29,7 +29,7 @@ class VehicleController {
         if (!plate || typeof plate !== 'string')
             throw new AppError("Placa do veículo informado não esta correto");
         const result = await serviseVehicle.delete(plate);
-        return res.status(200).json(result);
+        return res.status(204).json(result);
     }
 }
 export default new VehicleController();

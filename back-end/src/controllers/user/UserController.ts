@@ -13,6 +13,10 @@ class UserController {
         const result = await serviseUser.token({cpf, password});
         return res.status(201).json({token: result});
     }
+
+    async tokenValid(req: Request, res: Response) {
+        return res.status(201).json({status: 'success', messagem: 'Token válido.'});
+    }
 }
 
 export default new UserController();
