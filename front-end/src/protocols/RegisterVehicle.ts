@@ -2,9 +2,9 @@ export interface RegisterVehicle {
     plate: string;
     renavam: string;
     color: string;
-    power: number | null;
+    power: string;
     model: string;
     brand: string;
-    year_launch: number | null;
+    year_launch: string;
     state: string;
 }

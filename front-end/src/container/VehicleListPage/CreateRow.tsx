@@ -5,6 +5,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { InfosDataVehicleList } from '@/protocols/InfosDataVehicleList';
 import { IHistorySupply } from '@/protocols/HistorySupply';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import Link from 'next/link';
 
 
 export default function CreateRow(props: { row: InfosDataVehicleList, cols: number}) {
@@ -13,6 +16,12 @@ export default function CreateRow(props: { row: InfosDataVehicleList, cols: numb
 
     const handleHistorySupply = () => {
         // Buscar no banco de dados 
+    }
+
+    const deleteVehicle = (plate: string) => {
+      const result = confirm(`Deseja deletar o veículo com placa de n°: ${plate}`);
+      if(result) console.log('apagou');      
+      
     }
 
     const mockSupplies: IHistorySupply[] = [
@@ -49,6 +58,20 @@ export default function CreateRow(props: { row: InfosDataVehicleList, cols: numb
           <TableCell align="center">{row.brand}</TableCell>
           <TableCell align="center">{row.year_launch}</TableCell>
           <TableCell align="center">{row.state}</TableCell>
+          <TableCell 
+            align="center"
+            sx={{cursor: 'pointer'}}
+            >
+            <Link href={`/vehicle/edit/${row.plate}`}>
+              <BorderColorIcon sx={{fontSize: 20, color: "black"}}/>
+            </Link>
+          </TableCell>
+          <TableCell 
+            align="center"
+            sx={{cursor: 'pointer'}}
+            onClick={() => deleteVehicle(row.plate)}>
+            <DeleteForeverIcon sx={{color: 'red'}}/>
+          </TableCell>
         </TableRow>
         <TableDetails  title='Abastecimentos' titleColumns={titleDetails} open={open} infos={mockSupplies} cols={cols}/>
       </React.Fragment>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Table, TableBody, TableContainer, Paper, Button } from '@mui/material';
+import {Table, TableBody, TableContainer, Paper, Button, Typography } from '@mui/material';
 import CreateRow from './CreateRow';
 import TableHeaderCustom from '@/components/TableHeaderCustom';
 import { InfosDataSupplyList } from '@/protocols/InfosDataSupplyList';
@@ -16,19 +16,22 @@ const rows: InfosDataSupplyList[] = [
    
 ];
 
-const titlesHead = ["Id", "Quantidade", "Combustível", "Valor (R$)", "Data"];
+const titlesHead = ["Id", "Quantidade", "Combustível", "Valor (R$)", "Data", "Editar", "Excluir"];
 
 export default function SupplyListPage() {
   const router = useRouter();
 
   return (
     <>
+      <Typography sx={{my: 3}} variant="h4" gutterBottom>
+        Lista de Abastecimentos
+      </Typography>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHeaderCustom titlesHead={titlesHead}/>
           <TableBody>
             {rows.map((row, i) => (
-              <CreateRow key={row.id + i} row={row} cols={titlesHead.length + 1}/>
+              <CreateRow key={row.id + i} row={row} cols={titlesHead.length + 2}/>
               ))}
           </TableBody>
         </Table>

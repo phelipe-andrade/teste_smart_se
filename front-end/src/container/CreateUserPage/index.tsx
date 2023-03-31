@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Button, Box, TextField, Typography} from '@mui/material';
+import {Button, TextField, Typography} from '@mui/material';
 import {StyledForm, StyledBoxInput} from '@/styles/stylesGlobal';
 
 
@@ -46,7 +46,7 @@ export default function LoginForm() {
       component="form"
     >
       <Typography sx={{my: 2}} variant="h4" gutterBottom>
-        CADASTRE-SE
+        Cadastre-se
       </Typography>
       <StyledBoxInput
       component="div"

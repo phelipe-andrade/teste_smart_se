@@ -1,3 +1,5 @@
+import RegisterSupplyPage from "@/container/SupplyRegisterPage";
+
 export default function RegisterSupply() {
-    return <p>register supply</p>
+    return <RegisterSupplyPage/>
 }
