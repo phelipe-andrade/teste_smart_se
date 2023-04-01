@@ -33,7 +33,7 @@ class ServiceSupply {
     if(!userAlreadyExists) throw new AppError("Usuário não cadastrado.");
     
     const vehicleAlreadyExists = await prisma.vehicle.findFirst({ where: {plate: {equals: vehiclePlate, mode:'insensitive'}} });      
-    if(!vehicleAlreadyExists) throw new AppError(`Veículo com n° da placa: ${vehiclePlate} não está cadastrado.`);
+    if(!vehicleAlreadyExists) throw new AppError(`Veículo com n° da placa: ${vehiclePlate.toLocaleUpperCase()} não está cadastrado.`);
 
     return await prisma.supply.create({ data: {...supply, registered_by: id} })
     .then(() => ({status: "success", message:"Abastecimento cadastrado com sucesso."}))        

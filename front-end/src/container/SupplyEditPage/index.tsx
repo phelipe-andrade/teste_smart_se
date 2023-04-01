@@ -14,9 +14,9 @@ export default function SupplyEditPage(props: {id:number}) {
   const {id} = props;
   const [infos, setInfos] = useState<UpdadeSupply>({
     id: id,
-    qtd: null,
+    qtd: undefined,
     type_fuel: '',
-    value: null,
+    value: undefined,
     vehiclePlate: ''
   })
   const {loading, request, error} = useFetch<RegisterSupply>();

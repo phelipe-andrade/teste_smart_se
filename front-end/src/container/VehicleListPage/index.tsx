@@ -28,7 +28,7 @@ export default function VehicleList() {
     getVehicles();
   },[request, att])
 
-  if(loading) return <p>carregando...</p>;
+  if(loading) return <div>carregando...</div>;
 
   return (
     <>

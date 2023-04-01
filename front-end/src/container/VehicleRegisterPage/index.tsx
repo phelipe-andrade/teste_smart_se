@@ -18,8 +18,8 @@ export default function RegisterVehiclePage() {
     model: '',
     brand: '',
     color: '',
-    power: null,
-    year_launch: null,
+    power: undefined,
+    year_launch: undefined,
     state: ''
   })
 

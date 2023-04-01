@@ -1,7 +1,6 @@
 import Footer from '../Footer';
 import Header from '../Header'
 import * as Styled from './styles';
-import { ReactNode } from 'react';
 import { ChildProps } from '@/protocols/ChildProps';
 
 

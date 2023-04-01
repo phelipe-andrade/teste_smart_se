@@ -27,7 +27,7 @@ class ServiceDetails {
       }
     })
 
-    if(!vehicleWithSupplies) throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate}`);    
+    if(!vehicleWithSupplies) throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate.toLocaleUpperCase()}`);    
     return vehicleWithSupplies;
   }
 

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { useRouter } from 'next/router';
 import {AppBar, Box, Toolbar, Menu, Typography, IconButton, Container, Button, Tooltip, MenuItem} from '@mui/material';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserValidLogin } from '@/protocols/UserLogin';
@@ -53,35 +52,30 @@ export default function ResponsiveAppBar() {
     <AppBar position="static"  sx={{ bgcolor: '#1976d2'}}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
-          <Link href='/'>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Link href='/'>       
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                textDecoration: 'none',
+                color: "#fff"
+              }}
+            >
+              CAR | 
+            </Typography>
           </Link>
-          
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-          
           <MenuMobile pages={pages} handleCloseNavMenu={handleCloseNavMenu} handleOpenNavMenu={handleOpenNavMenu} anchorElNav={anchorElNav}/>
           
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href=""
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -89,12 +83,13 @@ export default function ResponsiveAppBar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
               textDecoration: 'none',
+              color: "#fff"
             }}
           >
-            LOGO
+            CAR
           </Typography>
+       
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(({text, link}) => (
                 <Link href={`/${link}`} key={text}>

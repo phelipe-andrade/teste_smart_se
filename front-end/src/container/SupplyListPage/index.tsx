@@ -28,7 +28,7 @@ export default function SupplyListPage() {
     getVehicles();
   },[request, att])
 
-  if (loading) return <p>Carregando...</p>
+  if (loading) return <div>Carregando...</div>
   
   return (
     <>

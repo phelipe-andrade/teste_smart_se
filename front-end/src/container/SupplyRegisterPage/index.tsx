@@ -12,9 +12,9 @@ export default function RegisterSupplyPage() {
   const router = useRouter();
   const {loading, request, error} = useFetch<RegisterSupply>();
   const [infos, setInfos] = useState<RegisterSupply>({
-      qtd: null,
+      qtd: undefined,
       type_fuel: '',
-      value: null,
+      value: undefined,
       vehiclePlate: ''
   })
 

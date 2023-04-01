@@ -10,7 +10,7 @@ class ServiceVehicle {
         checkPlate(plate);
         const vehicleExists = await prisma.vehicle.findUnique({ where: { plate } });
         if (!vehicleExists)
-            throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate}`);
+            throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate.toLocaleUpperCase()}`);
         return vehicleExists;
     }
     async create(vehicle, id) {
@@ -21,7 +21,7 @@ class ServiceVehicle {
             throw new AppError("Usuário não cadastrado.");
         const vehicleAlreadyExists = await prisma.vehicle.findFirst({ where: { plate: { equals: plate, mode: 'insensitive' } } });
         if (vehicleAlreadyExists)
-            throw new AppError(`Veículo com n° da placa: ${plate} já cadastrado.`);
+            throw new AppError(`Veículo com n° da placa: ${plate.toLocaleUpperCase()} já cadastrado.`);
         return await prisma.vehicle.create({ data: { ...vehicle, registered_by: id } })
             .then(() => ({ status: "success", message: "Veículo cadastrado com sucesso." }))
             .catch(() => { throw new AppError("Error ao cadastrar veículo."); });
@@ -29,10 +29,9 @@ class ServiceVehicle {
     async update(vehicle) {
         const { plate } = vehicle;
         checkPlate(plate);
-        console.log(vehicle);
         const vehicleExists = await prisma.vehicle.findFirst({ where: { plate: { equals: plate, mode: 'insensitive' } } });
         if (!vehicleExists)
-            throw new AppError(`Veículo com n° da placa: ${plate} não encontrado.`);
+            throw new AppError(`Veículo com n° da placa: ${plate.toLocaleUpperCase()} não encontrado.`);
         return await prisma.vehicle.update({
             where: { plate: vehicle.plate },
             data: vehicle
@@ -43,7 +42,7 @@ class ServiceVehicle {
     async delete(plate) {
         const vehicleExists = await prisma.vehicle.findUnique({ where: { plate } });
         if (!vehicleExists)
-            throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate}`);
+            throw new AppError(`Não existe nenhum veículo cadastrado com a placa de n°: ${plate.toLocaleUpperCase()}`);
         await prisma.supply.deleteMany({ where: { vehiclePlate: plate } });
         return await prisma.vehicle.delete({ where: { plate } })
             .then(() => ({ status: "success", message: "Veículo deletado com sucesso." }))

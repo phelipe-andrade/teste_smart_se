@@ -1,6 +1,6 @@
 export interface RegisterSupply {
-    qtd: number | null;
+    qtd: number | undefined;
     type_fuel: string;
-    value: number | null;
+    value: number | undefined;
     vehiclePlate: string;
 }

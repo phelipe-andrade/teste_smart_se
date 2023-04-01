@@ -18,8 +18,8 @@ export default function VehicleEditPage(props: {plate: any}) {
       model: '',
       brand: '',
       color: '',
-      power: null,
-      year_launch: null,
+      power: undefined,
+      year_launch: undefined,
       state: ''
   })
 

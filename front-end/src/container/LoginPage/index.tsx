@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {Button, TextField, Typography} from '@mui/material';
+import { TextField, Typography} from '@mui/material';
 import {StyledForm, StyledBoxInput} from '@/styles/stylesGlobal';
 import { useDispatch, useSelector } from 'react-redux';
 import validateCPF from '@/helper/validateCPF';
@@ -75,7 +75,7 @@ export default function LoginForm() {
       >
         <TextField
           sx={{my: 1}}
-          id="outlined-error-helper-text"
+          id="cpf"
           label="CPF"
           placeholder="Ex: 00000000000"
           type="tel"
@@ -88,7 +88,7 @@ export default function LoginForm() {
         />
         <TextField
           sx={{my: 1}}
-          id="outlined-error-helper-text"
+          id="senha"
           label="Senha"
           placeholder="*********"
           type="password"

@@ -4,15 +4,15 @@ import Typography from '@mui/material/Typography';
 
 export default function Footer() {
   return (
-    <Box sx={{ bgcolor: '#1976d2', pt: 4, pb: 2 }}>
+    <Box sx={{ bgcolor: '#1976d2', pt: 4, pb: 2, color: "#fff" }}>
       <Container maxWidth="lg">
         <Typography variant="h6" align="center" gutterBottom
         sx={{color: 'inherit'}}
         >
-          Footer
+          | CAR |
         </Typography>
-        <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
-          Place here any additional information you would like to include.
+        <Typography variant="subtitle1" align="center" color="text.secondary" component="p" sx={{color: "#fff"}}>
+          CAR | Todos os direitos reservados.
         </Typography>
       </Container>
     </Box>
