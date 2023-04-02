@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import formatDate from '@/helper/formatDate';
 
 export default function TableDetails<T extends  Record<string, any>>(props: {title: string, titleColumns: string[],  open: boolean, infos: T[], cols: number, loading: boolean}) {
     const {title, titleColumns, open, infos, cols , loading} = props;
@@ -32,8 +33,13 @@ export default function TableDetails<T extends  Record<string, any>>(props: {tit
                   {infos.map((obj, i) => (
                     <TableRow key={i}>
                         {Object.keys(obj).map((key, j)=> (
-                            
-                            <TableCell key={j}>{String(obj[key]).toLocaleUpperCase()}</TableCell>
+                            <TableCell 
+                            key={j}>
+                              {
+                              
+                              formatDate(obj[key])
+                              }
+                            </TableCell>
                         ))}
                     </TableRow>
                   ))}

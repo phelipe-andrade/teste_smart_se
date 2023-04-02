@@ -11,9 +11,10 @@ import useFetch from '@/helper/useFetch';
 import { getLocalStorage } from '@/helper/localStorage';
 import { DELETE_SUPPLY, GET_SUPPLY_DETAILS } from '@/api';
 import { SupplyWithDetails } from '@/protocols/SupplyWithDetails';
+import formatDate from '@/helper/formatDate';
 
-export default function CreateRow(props: { row: InfosDataSupplyList, cols: number, att: boolean, setAtt: Dispatch<SetStateAction<boolean>>}) {
-    const { row, cols, att, setAtt } = props;  
+export default function CreateRow(props: { row: InfosDataSupplyList, cols: number, setAtt: Dispatch<SetStateAction<boolean>>}) {
+    const { row, cols, setAtt } = props;  
     const [open, setOpen] = useState(false);
     
     const [supplyDetails, setsupplyDetails] = useState<SupplyWithDetails>({
@@ -69,7 +70,7 @@ export default function CreateRow(props: { row: InfosDataSupplyList, cols: numbe
           <TableCell align="center">{row.qtd}</TableCell>
           <TableCell align="center">{row.type_fuel}</TableCell>
           <TableCell align="center">{row.value}</TableCell>
-          <TableCell align="center">{row.created_at}</TableCell>
+          <TableCell align="center">{formatDate(row.created_at)}</TableCell>
           <TableCell 
             align="center"
             sx={{cursor: 'pointer'}}

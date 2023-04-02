@@ -40,7 +40,7 @@ export default function SupplyListPage() {
           <TableHeaderCustom titlesHead={titlesHead}/>
           <TableBody>
             {supplyList.map((row, i) => (
-              <CreateRow key={i} row={row} cols={titlesHead.length + 2} att={att} setAtt={setAtt}/>
+              <CreateRow key={i} row={row} cols={titlesHead.length + 2}  setAtt={setAtt}/>
               ))}
           </TableBody>
         </Table>
